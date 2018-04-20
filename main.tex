@@ -1,0 +1,143 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Academic Title Page
+% LaTeX Template
+% Version 2.0 (17/7/17)
+%
+% This template was downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% WikiBooks (LaTeX - Title Creation) with modifications by:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+% 
+% Instructions for using this template:
+% This title page is capable of being compiled as is. This is not useful for 
+% including it in another document. To do this, you have two options: 
+%
+% 1) Copy/paste everything between \begin{document} and \end{document} 
+% starting at \begin{titlepage} and paste this into another LaTeX file where you 
+% want your title page.
+% OR
+% 2) Remove everything outside the \begin{titlepage} and \end{titlepage}, rename
+% this file and move it to the same directory as the LaTeX file you wish to add it to. 
+% Then add \input{./<new filename>.tex} to your LaTeX file where you want your
+% title page.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[10pt]{article}
+
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage{mathpazo} % Palatino font
+\usepackage{tocloft,lipsum,pgffor,sectsty}
+
+\setcounter{tocdepth}{3}% Include up to \subsubsection in ToC
+
+% Font changes to ToC content of sectional units
+\renewcommand{\cftsecfont}{\LARGE\scshape}
+\renewcommand{\cftpartfont}{\normalfont\sffamily\bfseries}% \part font in ToC
+\renewcommand{\cftsecfont}{\normalfont\slshape}           % \section font in ToC
+\renewcommand{\cftsubsecfont}{\normalfont\itshape}        % \subsection font in ToC
+\renewcommand{\cftsubsubsecfont}{\normalfont\small}       % \subsubsection font in ToC
+
+% Font changes to document content of sectional units
+\renewcommand{\partfont}{\normalfont\Huge\bfseries}
+\renewcommand{\chapterfont}{\normalfont\huge\bfseries}
+\renewcommand{\sectionfont}{\normalfont\LARGE\bfseries}
+
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage} % Suppresses displaying the page number on the title page and the subsequent page counts as page 1
+	\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for horizontal lines, change thickness here
+	
+	\center % Centre everything on the page
+	
+	%------------------------------------------------
+	%	Headings
+	%------------------------------------------------
+	
+	\textsc{\LARGE INF-3910-3-3 - Computer Science Seminar: IoT services with LoRaWAN network and compatible embedded devices and sensors}\\[1.5cm] % Main heading such as the name of your university/college
+	
+	\textsc{\Large University of Tromsø}\\[0.5cm] % Major heading such as course name
+	
+	
+	%------------------------------------------------
+	%	Title
+	%------------------------------------------------
+	
+	
+	
+	{\huge\bfseries Animal tracker project }\\[0.4cm] % Title of your document
+
+	%------------------------------------------------
+	%	Author(s)
+	%------------------------------------------------
+	
+	% If you don't want a supervisor, uncomment the two lines below and comment the code above
+	{\Large{Thomas Bye Nilsen\\Valter Berg}}
+	%------------------------------------------------
+	%	Date
+	%------------------------------------------------
+	
+	\vfill\vfill\vfill % Position the date 3/4 down the remaining page
+	
+	{\large\today} % Date, change the \today to a set date if you want to be precise
+		
+	\vfill % Push the date up 1/4 of the remaining page
+	
+\end{titlepage}
+
+\tableofcontents
+\listoffigures
+%\listoftables
+
+\clearpage
+
+\section{Introduction}
+	This report describes the work that lays the foundation for our project. The project is about tracking certain animals in their natural habitat without hindering their way of living. The motivation for our project is the usefulness of the services provided by the system we develop. 
+	\subsection{Problem statement}
+		The problem we want to solve is to gather and present data regarding the environment and migration patterns of the animals using the IoT devices. We want to make the IoT devices to fit as many species as possible. We will track animals by emitting GPS coordinates, accelerometer data, battery voltage and temperature from the wearers. All data will be delivered to a backend system through the LoRaWAN network. We will also make it scalable. 
+		\\\\
+		We will primarily focus on individually gather the four types of data from an arbitrary number of observational units; we will not focus on creating a mesh network of sensors or the aspect of fault-tolerance. 
+		\\\\
+		The complexity of the project is not too high for a practical completion. The technology needed is available. In addition, we have been in contact with Rovdata, a company that tracks wild animals for the purpose of population control and positional tracking. Va ikke vi i kontakt med en sauebonde fra Lyngen å? 
+	\subsection{Background}
+		*words*
+		
+	\subsection{Member roles}
+		The team members are Valter Berg and Thomas Bye Nilsen. The member agree on the tasks that are to be solved. Both members work on the sensors, each of which implements separate features that make up the sensor functionalities. Thomas design the format for data transmission between the sensors and the backend system and present the data on the backend system. Valter works on managing the sensors from the backend system, implements a map functionality and create the boxes the sensors will be contained in. Both members test contact potential users in a real-world setting. They also conduct tests on animals. Both members will update each other on the state of the project.
+		\\\\
+		The rest of the report is layed out as milestone chapters, starting from milestone 2. The milestones are laid out on a timeline that incrementally builds a solution to the problem. Milestone 2 includes the project design.
+		
+		
+%		The design part will include an abstract design description, the architecture of the system and the use of the protocols. Each system component will be designed as well, such as the sensors, the communication between the sensors and the backend system and the backend system itself. 
+		
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
+
+
