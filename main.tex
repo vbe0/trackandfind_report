@@ -109,24 +109,57 @@
 \section{Introduction}
 	This report describes the work that lays the foundation for our project. The project is about tracking certain animals in their natural habitat without hindering their way of living. The motivation for our project is the usefulness of the services provided by the system we develop. 
 	\subsection{Problem statement}
-		The problem we want to solve is to gather and present data regarding the environment and migration patterns of the animals using the IoT devices. We want to make the IoT devices to fit as many species as possible. We will track animals by emitting GPS coordinates, accelerometer data, battery voltage and temperature from the wearers. All data will be delivered to a backend system through the LoRaWAN network. We will also make it scalable. 
+		The problem we want to solve is to gather and present data regarding the environment and migration patterns of the animals using the IoT devices. We want to make the IoT devices fit as many species as possible. We will track animals by emitting GPS coordinates, battery voltage and temperature from the wearers. All data will be delivered to a backend system through the LoRaWAN network. We will also make it scalable. 
 		\\\\
 		We will primarily focus on individually gather the four types of data from an arbitrary number of observational units; we will not focus on creating a mesh network of sensors or the aspect of fault-tolerance. 
 		\\\\
-		The complexity of the project is not too high for a practical completion. The technology needed is available. In addition, we have been in contact with Rovdata, a company that tracks wild animals for the purpose of population control and positional tracking. Va ikke vi i kontakt med en sauebonde fra Lyngen å? 
+		The complexity of the project is not too high for a practical completion. The technology needed is available and there seems to be not too much work to achieve it. In addition, we have been in contact with Rovdata, a company that tracks wild animals for the purpose of population control and positional tracking. Va ikke vi i kontakt med en sauebonde fra Lyngen å? 
 	\subsection{Background}
 		*words*
 		
 	\subsection{Member roles}
-		The team members are Valter Berg and Thomas Bye Nilsen. The member agree on the tasks that are to be solved. Both members work on the sensors, each of which implements separate features that make up the sensor functionalities. Thomas design the format for data transmission between the sensors and the backend system and present the data on the backend system. Valter works on managing the sensors from the backend system, implements a map functionality and create the boxes the sensors will be contained in. Both members test contact potential users in a real-world setting. They also conduct tests on animals. Both members will update each other on the state of the project.
+		The team members are Valter Berg and Thomas Bye Nilsen. The member agree on the tasks that are to be solved. Both members work on the sensors, each of which implements separate features that make up the sensor functionalities. Thomas designs the format for data transmission between the sensors and the backend system and present the data on the backend system. He also designs and makes the boxes that will contain battery and IoT device. Valter works on managing the sensors from the backend system and implements a map functionality. Both members contact potential users in a real-world setting. They also conduct tests on animals. Both members will update each other on the state of the project.
 		\\\\
-		The rest of the report is layed out as milestone chapters, starting from milestone 2. The milestones are laid out on a timeline that incrementally builds a solution to the problem. Milestone 2 includes the project design.
+		The rest of the report is laid out as milestone chapters, starting from milestone 2. The milestones are laid out on a time line that incrementally build a solution to the problem. Milestone 2 includes the project design, a high-level priority list of features to implement, technical design and outlining of risks, as well as how they will be mitigated. 
 		
 		
 %		The design part will include an abstract design description, the architecture of the system and the use of the protocols. Each system component will be designed as well, such as the sensors, the communication between the sensors and the backend system and the backend system itself. 
 		
 
 
+\section{Milestone 2}
+\subsection{Design decisions}
+	As of 19th of February, all (high-level) design decisions are clarified. To gather relevant data, we learn that a Pytrack expansion board and a temperature sensor are suitable for our use because they provide all the features we need. The relevant components are one GPS transmitter, accelerometer sensor and a DS18B20 one-wire digital temperature sensor. It reports degrees in Celsius in the range 55C to 125C (+/-0.5C). The GPS transmitter and the accelerometer sensor are embedded in the Pytrack. We need to focus on the power consumption because animals are in their natural habitat for months at a time, depending on the species. We would like to make the sensors as low-powered as possible because it takes time to replace the battery packages. We also need to focus on the design of the boxes. An important aspect is that they must not bother the wearers. In addition, it must be water-proof and able to withstand nudges and that they don't fall off the wearer. Finally, we need to present the data that are meaningful to the user.
+	\\\\
+	We prioritize the order in which the features are implemented. The features that must be included are:
+	\begin{itemize}  
+		\item Gather GPS coordinates, accelerometer data and temperature readings on the senors
+		\item Send the gathered data to a MIC Cloud instance provided by Telenor
+		\item Send data from MIC Cloud to a back-end system
+		\item Implement a back-end system with login sessions 		
+		\item Show the GPS coordinates in a map, along with time stamps and temperature readings
+		\item Check if accelerometer data has not changed in a given time
+	\end{itemize}
+	The features that should be included:
+	\begin{itemize}  
+		\item Two-way communication with MQTT
+		\item Show info and previous positions for each device
+		\item Notify the user if there is no change in movement for the individuals
+		\item Notify if some individuals are in unwanted positions, such as close to village, roads or similar places.
+	\end{itemize}
+	The features that could be included are:
+	\begin{itemize}  
+		\item Notify subscribed users on email or phone if interesting events happen
+		\item Implement a smart phone application that interfaces with the system
+		\item Comprehensive info about each animal.
+		\item Show any grassing areas that are beneficial to weight conditions or other factors
+	\end{itemize}
+
+\subsection{Overall flow and states}
+	So far we have a direction and goal for the project. We have a list for all the sensors we need, an architecture for the system and we also know how to design boxes that will be 3D-printed. In addition, we have setup a development environment and tested the LoPy device by sending some arbitrary data to MIC Cloud. We have also looked into popular development frameworks for implementing a back-end system for presenting the data.
+
+\subsection{Scope out and estimate time for work}
+	Taking the current state of the project into consideration, we believe we are on schedule. 
 
 
 
