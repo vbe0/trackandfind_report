@@ -111,7 +111,7 @@
 \clearpage
 
 \section{Introduction}
-	This report describes the work that lays the foundation for our project. The project is about tracking certain animals in their natural habitat without hindering their way of living. The motivation for our project is the usefulness of the services provided by the system we develop. Animal keepers can track down and surveil individuals as they are in movement in their natural habitat.
+	This report describes the work that lays the foundation for our project. The project is about tracking certain animals in their natural habitat without hindering their way of living. The motivation for our project is the usefulness of the services provided by the system we develop. Animal keepers can track down and survey individuals as they are in movement in their natural habitat.
 
 	\subsection{Problem statement}
 		The problem we want to solve is to gather and present data regarding the environment and movement patterns of the animals using IoT devices. We want to make the IoT devices fit as many species as possible. We will track animals by emitting GPS coordinates, accelerometer data, battery voltage and temperature from the IoT devices. All data will be delivered to a front-end system through the LoRaWAN network. 
@@ -120,7 +120,7 @@
 		\\\\
 		The complexity of the project is not too high for a practical completion. The technology needed is available and there seems to be not too much work to achieve it. After one week we will design the architecture of the system and make a list of equipment we need. We expect that we will acquire enough low-level details of the technical requirements after a few weeks to implement most of the core functionalities by milestone 3. The remaining functionalities will be postponed to milestone 4, if any. Soldering of electronics will take about one day. Designing and printing the box will take about one day as well. Designing and implementing the front-end system will take between one and two weeks. Bridging the transmission between the different components in system will take a few days. The time estimates include testing and debugging. 
 		\\\\
-		In addition, we have been in contact with Rovdata, a company that tracks wild animals for the purpose of population control and positional tracking. We also contacted some farmers who work with sheep herding to see if they could contribute with any opinions on the concept and design. The farmers were positive to our design and concept, but they were concerned about the total cost of implementing such a system on all their sheep, as they have 300 to 600 individuals grassing each summer. That is why we also intend to keep the cost as low as possible, which also should be an advantage with using cheap LoPy devices and a low-cost network such as LoRaWAN. 
+		In addition, we have been in contact with Rovdata, a company that tracks wild animals for the purpose of population control and positional tracking. We also contacted some farmers who work with sheep herding to see if they could contribute with any opinions on the concept and design. The farmers were positive to our design and concept, but they were concerned about the total cost of implementing such a system on all their sheep, as they have 300 to 600 individuals grassing each summer. That is why we also intend to keep the cost as low as possible, which also should be an advantage with using cheap LoPy devices and a low-cost network such as LoRa. 
 
 
 	\subsection{Background}
@@ -136,11 +136,11 @@
 			\caption{DS18B20 data sheet}
 			\includegraphics[width=6cm, height=6cm]{tempsensordatasheet}
 		\end{figure}
-		\textbf{LoRaWAN} \\
+\textbf{LoRaWAN}
 		LoRaWAN is a long range wide area network protocol designed to wirelessly connect small battery powered devices to the internet. It targets important internet of things features such as bi-directional communication, end-to-end security and mobility. LoRaWAN fits in the second and third layer of the OSI model, implemented on top of LoRa or FSK modulation in industrial, scientific and medical radio bands\cite{LoRaWAN}.
 		\\\\
 		\textbf{Mqtt and Managed IoT Cloud} \\
-		MQTT, or Message Queue Telemetry Transport, is a machine to machine/internet of things connectivity protocol based on publish-subscribe messaging. This protocol works on top of the TCP/IP protocols and enables communication with remote locations where small footprints are required or the bandwidth is limited. To do the publish-subscribe messaging, there is a message broker which distributes messages to connected clients based on the topic of the message\cite{wikiMQTT}. The Managed Iot Cloud, provided by Telenor, uses MQTT as its main protocol in the underlying AWS Iot Message broker for thing-to-backend communication. The Managed IoT Cloud platform enables managing of the IoT broker and data is routed with exposed MQTT topics\cite{telenorIOT}.
+		MQTT, or Message Queue Telemetry Transport, is a machine to machine/internet of things connectivity protocol based on publish-subscribe messaging. This protocol works on top of the TCP/IP protocols and enables communication with remote locations where small footprints are required or the bandwidth is limited. To do the publish-subscribe messaging, there is a message broker which distributes messages to connected clients based on the topic of the message\cite{wikiMQTT}. The Managed Iot Cloud (MIC), provided by Telenor, uses MQTT as its main protocol in the underlying AWS Iot Message broker for thing-to-backend communication. The Managed IoT Cloud platform enables managing of the IoT broker and data is routed through exposed MQTT topics. The MIC cloud platforms provides a user interface to view reported date from Lopy and gives you the opportunity to format the data sent to the Mqtt broker\cite{telenorIOT}.
 		
 		
 		
@@ -152,7 +152,7 @@
 			\textbf{Feature} & \textbf{Member}\\ \hline
 			Contact farmers & Valter\\ \hline
 			Contact Rovdata & Thomas\\ \hline
-			Test GPS, write basic script code for LoPy & Both\\ \hline
+			Test GPS and accelerometer, write basic script code for LoPy & Both\\ \hline
 			Solder temperature sensor, write test code, perform testing & Thomas\\ \hline
 			Solder battery package & Thomas\\ \hline
 			Design and print box. Test it in realistic envrionment & Thomas\\ \hline
@@ -162,12 +162,14 @@
 			Setup remote database for users & Valter\\ \hline
 			Query historic data and prepare data for view on a map & Thomas\\ \hline
 			Find map provider and write API for displaying positions & Valter\\ \hline
-			Write code for MQTT connection and live updates from Telenor Managed IoT Cloud and listen on all devices & Valter\\ \hline
+			Write server code for MQTT connection and live updates from Telenor Managed IoT Cloud and listen on all devices & Valter\\ \hline
+			Make front-end view for live or last update, toggle option for previous positions& Valter\\ \hline
 			Make GUI and back-end functionalities to edit properties with Telenor Cloud API. Simple GUI to edit update rate and save changes in a database & Valter\\ \hline
-			Implement fault-tolerance and deep sleep & Valter\\ \hline
+			Implement fault-tolerance and deep sleep on Lopy, perform tests & Valter\\ \hline
 			Setup server instance at Heroku for hosting & Valter\\ \hline
 			Test features and system behvaiour(e.g. battery life, signal strengths) & Both\\ \hline
 			Measure power consumption in deep sleep and work mode & Thomas\\ \hline
+			Generate dummy sensor data with script, used for testing of server and front-end & Valter\\ \hline
 		\end{longtable}
 		The rest of the report is laid out as milestone chapters, starting from milestone 2. The milestones are laid out on a timeline that incrementally build a solution to the problem. Milestone 2 includes the project design, a high-level priority list of features to implement, technical design and outlining of risks, as well as how they will be mitigated. Milestone 3 describes the state of the project after implementing the core functionalities and the path to achieve it, as well as any observations made. Milestone 4 describes the remaining implementation choices, the path the project took from milestone 3 and end-state of the project. Finally, there will be an analysis of some of the aspects in the project. At last, we will draw a conclusion. 		
 		
@@ -178,7 +180,7 @@
 		\\\\
 		We prioritize the order in which the features are implemented. The features that must be included are:
 		\begin{itemize}  
-			\item Gather GPS coordinates, battery data and temperature readings on the senors
+			\item Gather GPS coordinates, accelerometer data, battery voltage and temperature readings on the senors
 			\item Send the gathered data to a MIC Cloud instance provided by Telenor
 			\item Send data from MIC Cloud to a front-end system
 			\item Implement a front-end system with login sessions
@@ -190,7 +192,7 @@
 		\begin{itemize}  
 			\item Two-way communication with MQTT, being able to change state at lopy, e.g. update rate. 
 			\item Show info and previous positions for each device
-			\item Upon no movement registered with gps, or lack of gps signal, use accelerometer to verify that the animal is still alive and moving. 
+			\item Upon no movement registered with gps, or lack of gps signal, automatically use accelerometer to verify that the animal is still alive and moving. Give notification in GUI of result. 
 			\item Notify if some individuals are in unwanted positions, such as close to village, roads or similar places.
 			
 		\end{itemize}
@@ -214,17 +216,20 @@
 		Taking the current state of the project into consideration, we believe we are on schedule. By the time of milestone 3, we aim to have implemented most of the features on the server and on the observational units. We think that between milestone 3 and milestone 4 we implement all the remaining features. 
 		
 	\subsection{Technical design}
-		We begin by describing the architecture of the system, the choices that were and why they were made. The architecture is visualized in figure 1.
+		We begin by describing the architecture of the system, the choices made and why they were made. The architecture is visualized in figure 3. 
+		
+		\begin{figure}[h]
+			\caption{Architecture}
+			\includegraphics[width=10cm, height=6cm]{images/architecture.pdf}
+		\end{figure}
+
+		This is a distributed system with observational units on the edge, a cloud instance and a server with a front-end system. The AWS box in the figure is both the message broker for Mqtt transactions and were thing properties and historic data is stored in buckets. The MIC cloud handles LoRa connection with the Lopy devices and publishes formated data on a specific topic to the Mqtt broker at AWS. The node js server subscribes on the topic for the observation data from the AWS broker. The observation data is stored in buckets at AWS and are reached through a cloud API provided by telenor. The cloud API is also used for updating thing properties such as name and descriptions. The node js server also interact with a MongoDb database, although it is only used for login credentials and other small properties concerning our website(Not in the figure) . 
 		\\\\
-		\includegraphics[width=10cm, height=6cm]{images/figure1}
-		\\\\
-		This is a distributed system with observational units on the edge, a cloud instance and a server with a front-end system. The architecture uses a publish-subscribe pattern. Both the observational units and the Telenor MIC cloud publish and subscribe to each other, depending on the context.
-		\\\\
-		There is an arbitrary number of homogeneous observational units on the edge, each of which gathers data. Their homogeneity comes from the fact that they perform the same tasks in the same order. However, they might do their tasks at different points in time. Each observational unit will gather temperature in Celsius, GPS coordinates, accelerometer data and battery voltage. They will regularly send the observational data to the Telenor MIC Cloud using the MQTT protocol, which in turn sends the data to a server with a front-end system. The observational units publish the data and Telenor MIC Cloud subscribes to the published data. This choice comes from the fact that this is how the infrastructure works. The data is transmitted over LoRaWAN network because it is compatible with the MQTT protocol. 
+		There is an arbitrary number of homogeneous observational units on the edge, each of which gathers data. Their homogeneity comes from the fact that they perform the same tasks in the same order. However, they might do their tasks at different points in time. Each observational unit will gather temperature in Celsius, GPS coordinates, accelerometer data and battery voltage. They will regularly send the observational data to the Telenor MIC Cloud using the LoRaWAN protocol. The data is transmitted over LoRa network because it is important to have long range connections and low power consumption. It is also within the scope of the assignment to use LoRaWAN to connect with the Lopy devices.  
 		\\\\
 		We need a server with a front-end that displays the data because we can fine-tune the presentation of the data. It can also be more user-friendly than the provided MIC cloud GUI from Telenor. In addition, we would like to emulate a real-world user’s point of view from this front-end system. To enforce security measurements on the front-end component, we want a login feature. We want to make it possible for the end-user to manage the sensors from the front-end. This feature simplifies the process of naming sensors and managing their properties. 	
 		\\\\
-		We need to show the positions in a map and the temperature with the possibility to adjust the time interval because it can show where the individuals have been in a given point in time. The time is given in the ISO date. For each data point in the time interval $T_1$ to $T_2$, the longitude coordinate, latitude coordinate, temperature and battery voltage are displayed. The longitude and latitude coordinates are marked on a two-dimensional map as a single point. The temperature values are needed so that, in the case of too low temperatures, an animal keeper can track down the individuals and possibly move the pack. Also, researchers can look at the relation between geographical areas in which individuals are located and the temperatures in the areas. The battery voltage is needed so that an observational unit is able to alert the end-user of low battery life.  	
+		We need to show the positions in a map because knowing the position of the devices is the essential of this project. The time is given in the ISO date. For each data point in the time interval $T_1$ to $T_2$, the longitude coordinate, latitude coordinate, temperature and battery voltage are displayed. The longitude and latitude coordinates are marked on a two-dimensional map as a single point. It should also be possible to see the observation data of the temperature, accelerometer and battery at given points of time. This is so the user can access vital information of state of each device, specially upon abnormal events. These abnormal events can be too low temperatures where an animal keeper could track down the individuals and possibly move the pack. Also, researchers can look at the relation between geographical areas in which individuals are located and the temperatures in the areas. The battery voltage is needed so that an observational unit is able to alert the end-user of low battery life.  	
 		\\\\
 		The accelerometer data is used as a indicator along with the GPS data to see if a individual is likely to be deceased. If an individual has not changed its GPS position, it should be possible to see if the accelerometer data within a given time frame has changed. It may strengthen or weaken the suspicion of a deceased individual. If there is no GPS signal, the other observational data points are still sent. The accelerometer data can indicate whether or not an individual is still alive even though there is no GPS coverage.The time frame has yet to be decided through parameter adjustments. Because it is possible that the IoT device sends data at the time an individual sleeps, the time frame must be adjusted. For example, if an observational unit transmits data once a night, the animal might be at rest at a 
 		position it favours. The animal is still alive, but the sensor readings tell that it has not moved. However, if the update rate is rapidly (e.g. once every tenth minute) and the GPS coordinates and the accelerometer data don’t change over some period of time, it is likely that the animal is deceased. This should be recognized by the system itself, either server side or at the device, and then perform tests with increasing the update rate for reading sensor data. The state should then be presented with an alert level according to the adversity of the results.
