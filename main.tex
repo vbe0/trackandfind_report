@@ -39,6 +39,7 @@
 \usepackage{mathpazo} % Palatino font
 \usepackage{tocloft,lipsum,pgffor,sectsty}
  \usepackage{url, longtable}
+ \usepackage[toc,page]{appendix}
 
 \setcounter{tocdepth}{3}% Include up to \subsubsection in ToC
 
@@ -241,15 +242,18 @@
  
 
 	\subsection{Sensor side}
-		We have managed to gather GPS data and battery voltage from one of the two observational units. We have yet to implement the features on both Pytrack boards. In the development phase, we choose to omit one Pytrack board because their hardware components are homogeneous. It is fairly simple to upload the code used on one of the boards to the other board. We implement the Pytrack boards using MicroPython. We successfully send the gathered data with LoRaWAN to a Managed IoT Cloud instance. We use a 3.7V battery 600 mAh battery to power the sensor. When we deploy the sensor in a real-world environment in lower temperatures, we will use a bigger battery. \\\\
-		 We have also been looking at accelerometer data readings. We observe that the accelerometer values fluctuate in all three dimensions by about +/- 0.001g, even when the accelerometer is standing completely still. We think we can introduce an interval between which the values can fluctuate so that the system can ignore negligible fluctuations. Since we are interested in any movement regardless of its direction, the values for movement in x, y and z direction is summed together before they are sent. The summation of the data is reduced to three significant figures, as a more accurate precision is useless because of the fluctuation in the values. This also reduces the data size that has to be emitted. 
-		 \\\\
-		 The format of the data that we send is <longitude, latitude, battery voltage, temperature, accelerometer>. As of now, we only generate data for temperature since the actual sensor is still to be mounted on the Lopy device. The size of the payload we send is either 24 bytes or 34 bytes.The size depends on whether or not there is GPS coverage in the area. The values in the payload are separated by whitespaces. If there isn’t GPS coverage, we choose to send empty default values for longitude and latitude coordinates.
+		We have managed to gather GPS data, battery voltage and accelerometer data from the Lopy device. We implement the Pytrack boards using MicroPython. We successfully send the gathered data with LoRaWAN to a Managed IoT Cloud instance. We use a 3.7V battery 600 mAh battery to power the sensor. When we deploy the sensor in a real-world environment in lower temperatures, we will use a bigger battery. \\\\
+		We tested GPS data with carrying the device around on our self and checked in the MIC cloud GUI that they were correct. We also had them with us in our cars when driving about. What we did notice was that that we lacked many points on the route we have taken and we suspected a lack of GPS signal. When checking the historic observational data stored in AWS buckets, it was revealed that we were not having proper LoRa connection every where we went and therefore lacked the positions. This is reasonable as the LoRa network in the area is only at a test level with some antennas, meaning its coverage will be limited to certain areas. We did have observational data that were lacking GPS coordinates, but they were from testing the device inside a building. It is reasonable to think that there are areas in the habitat of the animals that may also lack GPS signals, e.g. close to buildings or cliffs. This problem is hard to cope with as it is decided of factors we don't influence, therefore it seems that the GPS suits it purpose as far as our testing goes. The device is set to wait for GPS signals for 20 seconds. If there is a chance of signals, this amount of wait time appeared to be decent during testing. Waiting any longer implies that the signals are very poor and the device might need to be moved somewhere else to retrieve signals. As the device runs in a loop when waiting on signals it uses much power and it is a trade-of between power consumption and the probability of getting GPS signals. We think it is better they for the device to go to sleep and try again next time it awakes when there is a chance the animal has moved to a more reachable location. \\\\  
+		We choose still to send temperature readings, accelerometer data and battery voltage if there is no GPS coverage because the data being sent are still useful. For example, if a sheep wears the observational unit and the end-user sees that the temperature drops to very low temperatures, the end-user can still take actions. The limitation, however, is the fact that the end-user is not aware of the sheep’s location. The battery voltage reading still serves its purpose of telling how long the observational unit has to live. The accelerometer data tells if there is any movement and therefore reveal if the animal is likely to be alive or not. 
 		\\\\
-		We choose still to send temperature readings and battery voltage if there is no GPS coverage because the data being sent are still useful. For example, if a sheep wears the observational unit and the end-user sees that the temperature drops to very low temperatures, the end-user can still take actions. The limitation, however, is the fact that the end-user is not aware of the sheep’s location. The battery voltage reading still serves its purpose of telling how long the observational unit has to live.
+		 When testing the accelerometer, we observe that the accelerometer values fluctuate in all three dimensions by about +/- 0.001g, even when the accelerometer is standing completely still. We think we can introduce an interval between which the values can fluctuate so that the system can ignore negligible fluctuations. Since we are interested in any movement regardless of its direction, the values for movement in x, y and z direction is summed together before they are sent. The summation of the data is reduced to three significant figures, as a more accurate precision is useless because of the fluctuation in the values. This also reduces the data size that has to be emitted. The system guarding these values still has to consider some fluctuation when checking the movement values. From testing we estimated that consecutive values inside a interval of +/-0.02g can be considered as no movement, but this should be tested a to a further extent in a more realistic environment before it is confirmed.
+		 \\\\
+		 The format of the data that we send is <longitude, latitude, battery voltage, temperature, accelerometer>. As of now, we only generate data for temperature since the actual sensor is still to be mounted on the Lopy device. The size of the payload we send is either 24 bytes or 34 bytes.The size depends on whether or not there is GPS coverage in the area. The values in the payload are separated by whitespaces. If there isn’t GPS coverage, we choose to send empty default values for longitude and latitude coordinates.\\\\
+		 The sleep time is a value meant to be set as it suits the conditions and environment the device is operating in. We have mentioned an update-rate meaning how often the device emits data, which in practice is how long the device sleeps between each measuring and transmit. We have yet to implement deep-sleep on the device.  
+	
 		
 	\subsection{Telenor MIC Cloud}
-		We read observational data on Telenor MIC Cloud by specifying the format of the observational data received from the Lopy. We successfully visualize the received data with the MIC cloud GUI widgets. This is very useful when testing the devices on connection and content of the data. Sending the data to the observational units is still an open issue.
+		We read observational data on Telenor MIC Cloud by specifying the format of the observational data received from the Lopy. We successfully visualize the received data with the MIC cloud GUI widgets. See Appendix figure 2. This is very useful when testing the devices on connection and content of the data. Sending the data back to the observational units is still an open issue.
 	 
 		
 	\subsection{Front-end}
@@ -259,7 +263,7 @@
 		\\\\
 		We choose to protect the front-end with password authentication because we believe that security is an important aspect of this project. Although the project is not planned to be shipped into production, it is worth applying best practices. After authentication, the user manages the front-end as it sees fit.
 		\\\\
-		To test the front-end and its behavior with more data and units, we wrote a scriptfor dummy units publishing generated observational data to the Mqtt broker.   
+		To test the front-end and its behavior with more data and units, we wrote a script for dummy units publishing generated observational data to the Mqtt broker.   
 		
 \section{Milestone 4}
 	As of 18th of April we have made progress on several aspects of the project. We have refined some of our approaches on the features since milestone 3 and implemented some new features as well. 
@@ -285,11 +289,7 @@
 		\end{figure}
 		Notice the black LoRa antenna to the right and the three temperature sensor cables to the left coming from down under the LoPy component. 
 		\\\\
-		The design of the box is based on being as small and lightweight as possible. Because the box is supposed to hang around an animal’s neck, the weight is in focus. It must be fairly easy to replace the battery package as well, without the risk of damaging anything. It should be waterproof as well. We use Tinkercad for designing the box. The final design is displayed in figure 6.
-		\begin{figure}[h]
-			\caption{The box with a Pytrack and battery package strapped onto it}
-			\includegraphics[width=10cm, height=13cm]{box}
-		\end{figure}
+		The design of the box is based on being as small and lightweight as possible. Because the box is supposed to hang around an animal’s neck, the weight is in focus. It must be fairly easy to replace the battery package as well, without the risk of damaging anything. It should be waterproof as well. We use Tinkercad for designing the box. The final design is displayed in Appendix figure 1.
 		The box is split into two by a plate that can be slided in and out of it. The battery package is on one side and the Pytrack board and temperature sensor is on the other side. The battery and Pytrack are strapped to the plate with hook-and-loop fasteners. There is a hole in the plate for the battery cable. The lid has two edges for fastening the plate in it. The box was 3D printed based on the design generated in Tinkercad. In reality, we had to use the SolidWorks editor to print because we had some issues with adjusting the printer settings. All in all, the design was migrated from Tinkercad to SolidWorks.
 		\\\\
 		The lid is attached to the rest of the box by three screws in each hole. In addition, we 
@@ -297,27 +297,37 @@
 		BILDE AV LOKE
 		
 	\subsection{Analysis of battery consumption}
-		On the edge, the battery consumption is in great focus. We send x bytes over LoRaWAN network, which is a relatively small amount of bytes, considering the fact that the LoRaWAN bandwidth is at y bytes. Taking into account that the Pytracks are in two states, namely “work” and “sleep”, we observe two different power consumption values. We use a lithium battery with 600 mAh at 3.7V. Measurements conducted when the Pytrack is in “work” state, the power consumption equals 64.4 mAh. During the “sleep” state, the consumption equals 18.2 $\mu$Ah. 
+		On the edge, the battery consumption is in great focus. We send 34 bytes over LoRaWAN network, which is a relatively small amount of bytes, considering the fact that the LoRaWAN bandwidth is at from 52 -200 bytes depending on the connection strength. Taking into account that the Pytracks are in two states, namely “work” and “sleep”, we observe two different power consumption values. We use a lithium battery with 600 mAh at 3.7V for testing. Measurements conducted when the Pytrack is in “work” state, the power consumption equals 64.4 mAh. During the “sleep” state, the consumption equals 18.2 $\mu$Ah. This means that having longer inactivity periods in deep-sleep will make the battery last longer.\\\\
+		From the measurement above the 600mAh battery is estimated to last 6.5 to 7 hours depending on the environment temperature. We conducted a simple test where we compared how long a battery lasted with and without use of deep-sleep. When running without deep-sleep, transmitting data every minute, the battery lasted 7 hours. When implementing a deep sleep of one minute between each "work" state, the battery lasted 33 hours. The life time was then extended almost 5 times. Although 33 hours is clearly not enough as, animal such as sheep stay out of bounds for several months each summer. 
 		\\\\
 		We believe that it is possible to decrease the amount of data being sent. If there is not GPS coverage, “None None” is sent. We can replace that pattern with for example “N N”. Although the transmission would decrease by only 6 bytes, it is still worth pointing out this alternative. 
 		\\\\
 		We also want to estimate battery life of an observational unit. In this case, we use two Sony 18650 battery coupled together in parallel, delivering 3000 mAh each. Together they deliver 6000 mAh. However, they are a few years old, so the output should be somewhere below 6000 mAh.
 		
+		\subsection{Front-end and server}
+		We are now able to listen on all devices at once with use of the cognito mode for subscribing on topics at Mqtt broker at AWS. We have up and running a map presenting all live things that are able to send their position and if no observational data is received, their previously known location is shown instead. Live and previous positions are separated with different markers to be more intuitive. It is possible to see when the data was registered, so one is able to evaluate freshness and relevance of a position and the observation data. There is a toggle option to hide and show things positions, since having all up at once can get complex with many individuals. There is also an option to view the path of previous positions of each thing. This feature can be viewed in Appendix figure 3. The data fetched for path is fetched with elastic search and cloud API provided by Telenor. \\\\
+		As of know we haven't reached to implement all the features we wanted to have at our server and front-end. Among these is the a system for checking accelerometer values upon suspicion of a deceased animal and setting the device update-rate from our server, which would be the sleep time. We did look into sending data and gave it an attempt, but were unable to succeed within the time of the delivery. The idea is that we can publish a desired state to a things topic at the Mqtt broker, which the MIC cloud is subscribing too. The MIC cloud should then transfer the data down to thing device upon receiving data from it, as it can only receive data when it is awake and just after it has sent its data. We managed to send a desired state to the MIC cloud, but failed to receive it at the thing device. Further debugging and testing is required to finish this feature, but we suspect the failure has something to do with the formating of data and handling of socket connections at the device.\\\\
+		We have deployed the server and website with Heroku web-app service, this is so it would be simpler demonstrate our product any where you have access to the web.  
 \section{Conclusion}
 	In this project we ventured on a task to track animals in the nature using LoRaWAN network and IoT devices. We have gained valuable insights into low-powered edge computing with limited power supply. We saw how edge computing is realized using IoT devices in a meaningful context. Looking  at the problem in question, we did solve it to a reasonable extent. Although some feature are missing, we believe we proved that the most important parts of the project were completed. At the very core, we draw a relation between the initial goal to transfer observational data over LoRaWAN and the fact that we did it. 
 
 	\subsection{Ending state}
-		
+		As one of the features we wanted to implement, but did not achieve is the already mentioned two-way communication. This opportunity for communication were to be used for setting the update-rate on the device, and there by also influence the power-consumption. As battery life time is, as mentioned, an important aspect of our product, this feature about setting update-rate is one of the more vital features we didn't achieve to implement. \\\\
+		The website and server have implemented the features we wanted to some extent, but suffers from some lacklusters and anomalies when handling edge cases. We have not reached to implement warnings upon events such as animal on the road or low battery. Although it is not ready to be sold as a product, it works well as a draft on how a website and server could look for our system. 
 
-	\subsection{Relevant work}
-		Rovdata uses similar tracking devices to track wolf, lynx, brown bear, wolverine and golden eagle. However, they seem to not measure temperature. Telespor is a local company based in Tromsø that provides similar services such as we do. However, they use 2G network and don't measure temperature either. 
-	
 	\subsection{Future work}
+	For a real-world application, the box's mass should be decreased. It's somewhat heavy, even for a 50 kg 	fully-grown German shepherd. As of now, we are able to track animals of similar size, but not smaller-sized animals. There should be conducted more testing on battery life time with adjusting factors such as sleep time. This is to find out with more certainty how often the device may transmit its observational data for a battery to last several months or maybe a year. 
+	The website would require more work on how to present data intuitively and perhaps be supplemented with an app for mobile devices.   
+	\\\\
 		An interesting aspect is any future work in the project. One of the COAT's collaboratives is interested in how positions, activity and temperature are collected. Those three data points can be correlated to each other to see the relation between changes. For example, in one season the temperature is at $a$ degrees Celsius in a particular area. Furthermore, there are $x$ individuals in this area. The next year, there can be a lower temperature in the same area. At the same time, it is counted less than $x$ individuals of the same species. By looking at correlation, one can predict migration patterns, given temperature fluctuations. In fact, Thomas has been in dialog with one of the COAT collaborators about a potential Master's Thesis that builds upon some aspects of this project. 
-		\\\\
-		For a real-world application, the box's mass should be decreased. It's somewhat heavy, even for a 50 kg fully-grown German shepherd. As of now, we are able to track animals of similar size, but not smaller-sized animals. 
+		
 		
 	
+	\subsection{Relevant work}
+		Rovdata uses similar tracking devices to track wolf, lynx, brown bear, wolverine and golden eagle. However, they seem to not measure temperature. Telespor is a local company based in Tromsø that provides similar services such as we do. However, they use 2G network and don't measure temperature either. \\\\
+		As our device is used for tracking, it is reasonable to think it can suit other tracking purposes as well and not only animals. An example is to use it on fishing equipment if you have problems with thefts and want to see were your items have gone. As we have shown, the little battery of 600mah lasted for 33 hours when updating each minute, which should suit such a purpose well. 
+	
+
 		
 
 \begin{thebibliography}{9}
@@ -339,6 +349,26 @@
 	
 	
 \end{thebibliography}
+
+\newpage
+\begin{appendices}
+\renewcommand\thefigure{\thesection.\arabic{figure}}    
+\setcounter{figure}{0}  
+\begin{figure}[h]
+	\caption{The box with a Pytrack and battery package strapped onto it}
+	\includegraphics[width=10cm, height=13cm]{box}
+\end{figure}
+\begin{figure}[h]
+	\caption{View on how the widgets in MIC displayed observational data.}
+	\includegraphics[scale=0.3]{miccloud.pdf}
+\end{figure}
+
+\begin{figure}[h]
+	\caption{View of website showing history path and latest position of one device.}
+	\includegraphics[scale=0.25]{website.pdf}
+\end{figure}
+
+\end{appendices}
 
 
 \end{document}
